@@ -1,7 +1,7 @@
 {
-  "name": "discord-telegram-bridge",
+  "name": "discord-to-telegram-forwarder",
   "version": "2.0.0",
-  "description": "A simple, small and fast Discord <-> Telegram bridge written in Node.js",
+  "description": "A simple, small and fast Discord to Telegram forwarder written in Node.js",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -16,12 +16,11 @@
   },
   "dependencies": {
     "discord.js": "^12.2.0",
-    "express": "^4.17.1",
     "node-fetch": "^3.1.0",
     "node-telegram-bot-api": "^0.56.0"
   },
   "repository": {
-    "url": "https://github.com/SebaUbuntu/discord-telegram-bridge"
+    "url": "https://github.com/HHK-ETH/Discord-To-Telegram-Forwarder"
   },
   "license": "GPL-3.0-or-later",
   "keywords": [

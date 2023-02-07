@@ -1,5 +1,5 @@
 {
-  "name": "Discord-Telegram-Bridge",
-  "description": "A simple and fast way to bridge a discord channel to a telegram chat",
-  "repository": "https://github.com/SebaUbuntu/discord-telegram-bridge"
+  "name": "Discord-To-Telegram-Forwarder",
+  "description": "A simple and fast way to forward one or multiple discord channel(s) to a telegram chat",
+  "repository": "https://github.com/HHK-ETH/Discord-To-Telegram-Forwarder"
 }
