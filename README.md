@@ -1,7 +1,7 @@
 # Discord-To-Telegram-Forwarder
 Initially forked from Rikj000/Discord-Telegram-Bridge
 
-`Discord` -> `Telegram` forwarder
+Simple `Discord` -> `Telegram` forwarder
 
 #### Setup:
 * Clone the GitHub repo.
