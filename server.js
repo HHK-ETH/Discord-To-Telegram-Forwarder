@@ -6,9 +6,10 @@ import TelegramBot from "node-telegram-bot-api";
 // import env variables
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-const DISCORD_CHANNEL_IDS = process.env.DISCORD_CHANNEL_IDS.split(" ");
+const DISCORD_CHANNEL_IDS = process.env.DISCORD_CHANNEL_IDS.split(";");
 const DISCORD_FORWARD_BOT = (process.env.DISCORD_FORWARD_BOT === 'true')
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
+const MSG_FILTER = process.env.MSG_FILTER.split(";");
 
 console.log("Telegram bot token: " + TELEGRAM_BOT_TOKEN);
 console.log("Telegram chat id: " + TELEGRAM_CHAT_ID);
@@ -33,6 +34,13 @@ discordClient.once("ready", () => {
 		// Ignore messages from bots if DISCORD_FORWARD_BOT is 'false'
 		if (DISCORD_CHANNEL_IDS.indexOf(message.channel.id) === -1 || (message.author.bot && !DISCORD_FORWARD_BOT)) {
 			return;
+		}
+
+		// Apply filter
+		for (let msg of MSG_FILTER) {
+			if (message.indexOf(msg) !== -1) {
+				return; 
+			}
 		}
 
 		const mentioned_usernames = [];
