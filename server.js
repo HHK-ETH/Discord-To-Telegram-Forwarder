@@ -38,7 +38,7 @@ discordClient.once("ready", () => {
 
 		// Apply filter
 		for (let msg of MSG_FILTER) {
-			if (message.indexOf(msg) !== -1) {
+			if (message.content.indexOf(msg) !== -1) {
 				return; 
 			}
 		}
