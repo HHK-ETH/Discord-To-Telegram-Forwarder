@@ -60,7 +60,7 @@ discordClient.once("ready", () => {
 		let text = finalMessageContent + ` ${attachmentUrls.join(' ')}` + mentioned_usernames.join(" ");
 
 		try {
-			telegram.sendMessage(TELEGRAM_CHAT_ID, text, {parse_mode: 'markdown'});
+			telegram.sendMessage(TELEGRAM_CHAT_ID, text, {/*parse_mode: 'markdown',*/ disable_web_page_preview: false});
 		}
 		catch(err) {
 			console.log(err.message);
