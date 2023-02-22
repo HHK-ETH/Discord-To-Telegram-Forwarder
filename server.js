@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
-import { Client, Intents } from "discord.js";
+import { Client, IntentsBitField } from "discord.js";
 import TelegramBot from "node-telegram-bot-api";
 
 // import env variables
@@ -18,7 +18,7 @@ console.log("Discord channel ids: " + DISCORD_CHANNEL_IDS);
 
 const telegram = new TelegramBot(TELEGRAM_BOT_TOKEN, {polling: true});
 
-const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const discordClient = new Client({ intents: [IntentsBitField.Flags.Guilds] });
 
 discordClient.login(DISCORD_TOKEN);
 
