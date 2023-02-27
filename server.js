@@ -17,7 +17,7 @@ console.log('Telegram chat id: ' + TELEGRAM_CHAT_ID);
 console.log('Discord token: ' + DISCORD_TOKEN);
 console.log('Discord channel ids: ' + DISCORD_CHANNEL_IDS);
 
-const telegram = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+const telegram = new TelegramBot(TELEGRAM_BOT_TOKEN);
 
 const discordClient = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
@@ -29,10 +29,7 @@ discordClient.once(Events.ClientReady, () => {
   console.log('Discord bot ready!');
 
   // Discord -> Telegram handler
-  discordClient.on(Events.MessageCreate, (message) => {
-    // the program currently check if the message's from a bot to check for duplicates.
-    // This isn't the best method but it's good enough.
-    // A webhook counts as a bot in the discord api, don't ask me why.
+  discordClient.on(Events.MessageCreate, async (message) => {
     // Ignore messages from bots if DISCORD_FORWARD_BOT is 'false'
     if (DISCORD_CHANNEL_IDS.indexOf(message.channel.id) === -1 || (message.author.bot && !DISCORD_FORWARD_BOT)) {
       return;
@@ -45,27 +42,45 @@ discordClient.once(Events.ClientReady, () => {
       }
     }
 
-    const mentioned_usernames = [];
-    for (let mention of message.mentions.users) {
-      mentioned_usernames.push('@' + mention[1].username);
+    let text = '';
+    if (message.content.indexOf('[Tweeted]') === 0 || message.content.indexOf('[Retweeted]') === 0) {
+      text = parseTweetLink(message.content.toLowerCase());
+    } else {
+      text = parseMessage(message);
     }
-    const attachmentUrls = [];
-    for (let attachment of message.attachments) {
-      attachmentUrls.push(attachment[1].url);
-    }
-
-    // attachmentUrls is empty when there are no attachments so we can be just lazy
-    let finalMessageContent = message.content.replace(/<@.*>/gi, '');
-    // convert bold text for telegram markdown
-    finalMessageContent = finalMessageContent.replace(/\*\*/g, '*');
-
-    let text = finalMessageContent + ` ${attachmentUrls.join(' ')}` + mentioned_usernames.join(' ');
 
     try {
-      telegram.sendMessage(TELEGRAM_CHAT_ID, text, { /*parse_mode: 'markdown',*/ disable_web_page_preview: false });
+      await telegram.sendMessage(TELEGRAM_CHAT_ID, text);
     } catch (err) {
       console.log(err.message);
-      return;
+      console.log(err);
     }
   });
 });
+
+function parseTweetLink(message) {
+  message = message.replaceAll('[', '');
+  message = message.replaceAll(']', ': ');
+  message = message.replaceAll('(', '');
+  message = message.replaceAll(')', '');
+
+  return message;
+}
+
+function parseMessage(message) {
+  const mentioned_usernames = [];
+  for (let mention of message.mentions.users) {
+    mentioned_usernames.push('@' + mention[1].username);
+  }
+  const attachmentUrls = [];
+  for (let attachment of message.attachments) {
+    attachmentUrls.push(attachment[1].url);
+  }
+
+  // remove tags
+  let finalMessageContent = message.content.replace(/<@.*>/gi, '');
+  // convert bold text for telegram markdown
+  finalMessageContent = finalMessageContent.replace(/\*\*/g, '*');
+
+  return finalMessageContent + ` ${attachmentUrls.join(' ')}` + mentioned_usernames.join(' ');
+}
