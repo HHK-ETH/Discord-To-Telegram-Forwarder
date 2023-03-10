@@ -49,11 +49,14 @@ discordClient.once(Events.ClientReady, () => {
       text = parseMessage(message);
     }
 
-    try {
-      await telegram.sendMessage(TELEGRAM_CHAT_ID, text);
-    } catch (err) {
-      console.log(err.message);
-      console.log(err);
+    let isForwarded = false;
+    while (!isForwarded) {
+      try {
+        const tgMsg = await telegram.sendMessage(TELEGRAM_CHAT_ID, text);
+        if (tgMsg.message_id) isForwarded = true;
+      } catch (err) {
+        console.log(err);
+      }
     }
   });
 });
